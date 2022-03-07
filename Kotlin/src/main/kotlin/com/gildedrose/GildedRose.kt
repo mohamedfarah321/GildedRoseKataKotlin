@@ -3,10 +3,11 @@ package com.gildedrose
 class GildedRose(var items: Array<Item>) {
 
     fun updateQuality() {
+
         for (i in items.indices) {
-            if (!isAgedBrie(items[i]) && !isBackstagePass(items[i])) {
+            if (!(items[i].isAgedBrie()) && !(items[i].isBackStagePass())) {
                 if (items[i].quality > 0) {
-                    if (!isSulfuras(items[i])) {
+                    if (!(items[i].isSulfuras())) {
                         items[i].quality = items[i].quality - 1
                     }
                 }
@@ -14,7 +15,7 @@ class GildedRose(var items: Array<Item>) {
                 if (items[i].quality < 50) {
                     items[i].quality = items[i].quality + 1
 
-                    if (isBackstagePass(items[i])) {
+                    if ((items[i].isBackStagePass())) {
                         if (items[i].sellIn < 11) {
                             if (items[i].quality < 50) {
                                 items[i].quality = items[i].quality + 1
@@ -30,15 +31,15 @@ class GildedRose(var items: Array<Item>) {
                 }
             }
 
-            if (!isSulfuras(items[i])) {
+            if (!(items[i]).isSulfuras()) {
                 items[i].sellIn = items[i].sellIn - 1
             }
 
             if (items[i].sellIn < 0) {
-                if (!isAgedBrie(items[i])) {
-                    if (!isBackstagePass(items[i])) {
+                if (!(items[i]).isAgedBrie()) {
+                    if (!(items[i].isBackStagePass())) {
                         if (items[i].quality > 0) {
-                            if (!isSulfuras(items[i])) {
+                            if (!(items[i].isSulfuras())) {
                                 items[i].quality = items[i].quality - 1
                             }
                         }
@@ -54,9 +55,9 @@ class GildedRose(var items: Array<Item>) {
         }
     }
 
-    private fun isAgedBrie(item: Item) = item.name.contains(AGED_BRIE, ignoreCase = true)
-    private fun isSulfuras(item: Item) = item.name.contains(SULFURAS, ignoreCase = true)
-    private fun isBackstagePass(item: Item) = item.name.contains(BACKSTAGE_PASS, ignoreCase = true)
+    private fun Item.isAgedBrie() = name.contains(AGED_BRIE, ignoreCase = true)
+    private fun Item.isSulfuras() = name.contains(SULFURAS, ignoreCase = true)
+    private fun Item.isBackStagePass() = name.contains(BACKSTAGE_PASS, ignoreCase = true)
 
     companion object {
         private const val AGED_BRIE = "Aged Brie"
@@ -65,4 +66,3 @@ class GildedRose(var items: Array<Item>) {
     }
 
 }
-
