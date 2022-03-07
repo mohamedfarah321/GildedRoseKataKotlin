@@ -3,46 +3,40 @@ package com.gildedrose
 class GildedRose(var items: Array<Item>) {
 
     fun updateQuality() {
-
         items.forEach { item ->
-            updateQualityPerItem(item)
+            item.updateItem()
         }
     }
 
-    private fun updateQualityPerItem(item: Item) {
+    private fun Item.updateItem() {
+        if (isSulfuras()) return
+        if (isAgedBrie()) return updateAgedBrie()
+        if (isBackStagePass()) return updateBackstagePass()
 
-        if (item.isSulfuras()) return
+        updateNormalItem()
+    }
 
-        if (item.isAgedBrie()) {
-            item.increaseQualityBy(1)
-            decreaseSellIn(item)
-            return
-        }
+    private fun Item.updateAgedBrie() {
+        decreaseSellIn()
+        increaseQualityBy(1)
+    }
 
-        if (item.isBackStagePass()) {
-            item.increaseQualityBy(1)
-            if (item.sellIn <= 10) {
-                item.increaseQualityBy(1)
-            }
-            if (item.sellIn <= 5) {
-                item.increaseQualityBy(1)
-            }
-            if (item.sellIn <= 0) {
-                item.quality = 0
-            }
-            return
-        }
-
-        decreaseQuality(item)
-        decreaseSellIn(item)
-
-        if (item.sellIn < 0) {
-            decreaseQuality(item)
+    private fun Item.updateBackstagePass() {
+        when (sellIn) {
+            in Int.MIN_VALUE .. 0 -> quality = 0
+            in 0..5 -> increaseQualityBy(3)
+            in 6..10 -> increaseQualityBy(2)
+            else -> increaseQualityBy(1)
         }
     }
 
-    private fun decreaseSellIn(item: Item) {
-        item.sellIn--
+    private fun Item.updateNormalItem() {
+        decreaseSellIn()
+        if (sellIn < 0) decreaseQualityBy(2) else decreaseQualityBy(1)
+    }
+
+    private fun Item.decreaseSellIn() {
+        sellIn--
     }
 
     private fun Item.increaseQualityBy(delta: Int) {
@@ -50,10 +44,9 @@ class GildedRose(var items: Array<Item>) {
         quality = quality.coerceAtMost(50)
     }
 
-    private fun decreaseQuality(item: Item) {
-        if (item.quality > 0) {
-            item.quality--
-        }
+    private fun Item.decreaseQualityBy(delta: Int) {
+        quality -= delta
+        quality = quality.coerceAtLeast(0)
     }
 
 
