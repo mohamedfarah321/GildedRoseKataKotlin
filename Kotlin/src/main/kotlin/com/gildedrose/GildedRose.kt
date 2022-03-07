@@ -12,6 +12,7 @@ class GildedRose(var items: Array<Item>) {
         if (isSulfuras()) return
         if (isAgedBrie()) return updateAgedBrie()
         if (isBackStagePass()) return updateBackstagePass()
+        if (isConjured()) return updateConjured()
 
         updateNormalItem()
     }
@@ -28,6 +29,10 @@ class GildedRose(var items: Array<Item>) {
             in 6..10 -> increaseQualityBy(2)
             else -> increaseQualityBy(1)
         }
+    }
+
+    private fun Item.updateConjured() {
+        decreaseQualityBy(2)
     }
 
     private fun Item.updateNormalItem() {
@@ -53,11 +58,13 @@ class GildedRose(var items: Array<Item>) {
     private fun Item.isAgedBrie() = name.contains(AGED_BRIE, ignoreCase = true)
     private fun Item.isSulfuras() = name.contains(SULFURAS, ignoreCase = true)
     private fun Item.isBackStagePass() = name.contains(BACKSTAGE_PASS, ignoreCase = true)
+    private fun Item.isConjured() = name.contains(CONJURED, ignoreCase = true)
 
     companion object {
         private const val AGED_BRIE = "Aged Brie"
         private const val SULFURAS = "Sulfuras"
         private const val BACKSTAGE_PASS = "Backstage pass"
+        private const val CONJURED = "Conjured"
     }
 
 }
