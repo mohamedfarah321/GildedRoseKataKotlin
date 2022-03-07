@@ -102,6 +102,14 @@ internal class GildedRoseTest {
         assertEquals(0, app.items[0].quality)
     }
 
+    @Test
+    fun `Given Conjured item, When on updateQuality(), Then quality drops twice as fast`() {
+        val items = arrayOf(Item("Conjured", 2, 8))
+        val app = GildedRose(items)
+        app.updateQuality()
+        assertEquals(6, app.items[0].quality)
+    }
+
 }
 
 
