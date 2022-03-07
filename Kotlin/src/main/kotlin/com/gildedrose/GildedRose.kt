@@ -10,52 +10,49 @@ class GildedRose(var items: Array<Item>) {
     }
 
     private fun updateQualityPerItem(item: Item) {
-        if (!item.isAgedBrie() && !(item.isBackStagePass())) {
-            if (item.quality > 0) {
-                if (!(item.isSulfuras())) {
-                    item.quality = item.quality - 1
-                }
-            }
-        } else {
-            if (item.quality < 50) {
-                item.quality = item.quality + 1
 
-                if ((item.isBackStagePass())) {
-                    if (item.sellIn < 11) {
-                        if (item.quality < 50) {
-                            item.quality = item.quality + 1
-                        }
-                    }
+        if (item.isSulfuras()) return
 
-                    if (item.sellIn < 6) {
-                        if (item.quality < 50) {
-                            item.quality = item.quality + 1
-                        }
-                    }
-                }
-            }
+        if (item.isAgedBrie()) {
+            item.increaseQualityBy(1)
+            decreaseSellIn(item)
+            return
         }
 
-        if (!item.isSulfuras()) {
-            item.sellIn = item.sellIn - 1
+        if (item.isBackStagePass()) {
+            item.increaseQualityBy(1)
+            if (item.sellIn <= 10) {
+                item.increaseQualityBy(1)
+            }
+            if (item.sellIn <= 5) {
+                item.increaseQualityBy(1)
+            }
+            if (item.sellIn <= 0) {
+                item.quality = 0
+            }
+            return
         }
+
+        decreaseQuality(item)
+        decreaseSellIn(item)
 
         if (item.sellIn < 0) {
-            if (!item.isAgedBrie()) {
-                if (!item.isBackStagePass()) {
-                    if (item.quality > 0) {
-                        if (!(item.isSulfuras())) {
-                            item.quality = item.quality - 1
-                        }
-                    }
-                } else {
-                    item.quality = item.quality - item.quality
-                }
-            } else {
-                if (item.quality < 50) {
-                    item.quality = item.quality + 1
-                }
-            }
+            decreaseQuality(item)
+        }
+    }
+
+    private fun decreaseSellIn(item: Item) {
+        item.sellIn--
+    }
+
+    private fun Item.increaseQualityBy(delta: Int) {
+        quality += delta
+        quality = quality.coerceAtMost(50)
+    }
+
+    private fun decreaseQuality(item: Item) {
+        if (item.quality > 0) {
+            item.quality--
         }
     }
 
